@@ -413,7 +413,9 @@ public class MultiReaderTxnWriterWithFailoverTest {
                         return FutureHelpers.delayedTask(() -> {
                             if (transaction.checkStatus() == Transaction.Status.OPEN) {
                                 FutureHelpers.runOrFail(() -> {
+                                    log.debug("Running ping for txn {}.", transaction.getTxnId());
                                     transaction.ping(5000);
+                                    log.debug("Finished ping for txn {}.", transaction.getTxnId());
                                     return null;
                                 }, new CompletableFuture<Void>());
                             } else {
