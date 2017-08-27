@@ -271,12 +271,12 @@ public class MultiReaderTxnWriterWithFailoverTest {
             log.info("Stop write flag status {}", stopWriteFlag);
             stopWriteFlag.set(true);
 
-            //wait for txns to get committed
-            FutureHelpers.allOf(txnStatusFutureList).get();
-
             //wait for writers completion
             log.info("Wait for writers execution to complete");
             FutureHelpers.allOf(writerFutureList).get();
+
+            //wait for txns to get committed
+            FutureHelpers.allOf(txnStatusFutureList).get();
 
             //set the stop read flag to true
             log.info("Stop read flag status {}", stopReadFlag);
@@ -445,6 +445,7 @@ public class MultiReaderTxnWriterWithFailoverTest {
                     }
                 }
             }
+            log.info("Closing writer");
         }, executorService);
     }
 
@@ -510,7 +511,7 @@ public class MultiReaderTxnWriterWithFailoverTest {
                     log.error("Test Exception while reading from the stream: ", e);
                 }
             }
-
+            log.info("Closing reader");
         }, executorService);
     }
 
