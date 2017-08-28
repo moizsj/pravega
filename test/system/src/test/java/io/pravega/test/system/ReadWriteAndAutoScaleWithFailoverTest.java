@@ -49,7 +49,7 @@ public class ReadWriteAndAutoScaleWithFailoverTest extends AbstractFailoverTests
 
     private static final int INIT_NUM_WRITERS = 2;
     private static final int NUM_READERS = 2;
-    private static final int TOTAL_NUM_WRITERS = 8;
+    private static final int TOTAL_NUM_WRITERS = 4;
 
     //The execution time for @Before + @After + @Test methods should be less than 15 mins. Else the test will timeout.
     @Rule
@@ -102,8 +102,9 @@ public class ReadWriteAndAutoScaleWithFailoverTest extends AbstractFailoverTests
         executorService = Executors.newScheduledThreadPool(NUM_READERS + TOTAL_NUM_WRITERS + 1);
         controllerExecutorService = ExecutorServiceHelpers.newScheduledThreadPool(5,
                                                                                   "MultiReaderTxnWriterWithFailoverTest-Controller");
-        //get Controller Uri
-        controller = new ControllerImpl(controllerURIDirect, ControllerImplConfig.builder().retryAttempts(1).build(), controllerExecutorService);
+        // total retry duration is around 32+ seconds.
+        controller = new ControllerImpl(controllerURIDirect, ControllerImplConfig.builder().retryAttempts(12)
+                .maxBackoffMillis(5000).build(), controllerExecutorService);
         testState = new TestState();
         testState.writersListComplete.add(0, testState.writersComplete);
         testState.writersListComplete.add(1, testState.newWritersComplete);
