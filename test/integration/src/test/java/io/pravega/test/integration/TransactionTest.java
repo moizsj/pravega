@@ -35,10 +35,12 @@ import java.util.Collections;
 import lombok.Cleanup;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class TransactionTest {
     private Level originalLevel;
     private ServiceBuilder serviceBuilder;
